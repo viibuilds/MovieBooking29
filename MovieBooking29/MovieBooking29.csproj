@@ -57,10 +57,23 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CancelBooking29.aspx" />
     <Content Include="Default29.aspx" />
+    <Content Include="Login29.aspx" />
+    <Content Include="MyBookings29.aspx" />
+    <Content Include="Profile29.aspx" />
+    <Content Include="Register29.aspx" />
+    <Content Include="UpdateBooking29.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CancelBooking29.aspx.cs">
+      <DependentUpon>CancelBooking29.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CancelBooking29.aspx.designer.cs">
+      <DependentUpon>CancelBooking29.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Default29.aspx.cs">
       <DependentUpon>Default29.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -68,7 +81,42 @@
     <Compile Include="Default29.aspx.designer.cs">
       <DependentUpon>Default29.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Login29.aspx.cs">
+      <DependentUpon>Login29.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login29.aspx.designer.cs">
+      <DependentUpon>Login29.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="MyBookings29.aspx.cs">
+      <DependentUpon>MyBookings29.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MyBookings29.aspx.designer.cs">
+      <DependentUpon>MyBookings29.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Profile29.aspx.cs">
+      <DependentUpon>Profile29.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Profile29.aspx.designer.cs">
+      <DependentUpon>Profile29.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Register29.aspx.cs">
+      <DependentUpon>Register29.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Register29.aspx.designer.cs">
+      <DependentUpon>Register29.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateBooking29.aspx.cs">
+      <DependentUpon>UpdateBooking29.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UpdateBooking29.aspx.designer.cs">
+      <DependentUpon>UpdateBooking29.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Web.Debug.config">

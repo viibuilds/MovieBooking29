@@ -13,6 +13,20 @@
 
         <hr />
 
+        <h2>My Account</h2>
+
+        <asp:HyperLink ID="LinkMyBookings29" runat="server" NavigateUrl="~/MyBookings29.aspx">My Bookings</asp:HyperLink>
+
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+
+        <asp:HyperLink ID="LinkUpdateBooking29" runat="server" NavigateUrl="~/UpdateBooking29.aspx">Update Booking</asp:HyperLink>
+
+        &nbsp;&nbsp;|&nbsp;&nbsp;
+
+        <asp:HyperLink ID="LinkCancelBooking29" runat="server" NavigateUrl="~/CancelBooking29.aspx">Cancel Booking</asp:HyperLink>
+
+        <hr />
+
         <h2>Add Movie Category</h2>
 
         <asp:TextBox ID="TxtCategory29" runat="server" placeholder="Enter Category Name"></asp:TextBox>
@@ -51,6 +65,51 @@
         <br /><br />
 
         <asp:Label ID="LblMovieMessage29" runat="server"></asp:Label>
+
+        <hr />
+
+        <h2>Book Movie Tickets</h2>
+
+        Movie Category:
+
+        <asp:DropDownList ID="DropDownBookingCategory29" runat="server"
+            AutoPostBack="true"
+            OnSelectedIndexChanged="DropDownBookingCategory29_SelectedIndexChanged">
+        </asp:DropDownList>
+
+        <br /><br />
+
+        Select Movie:
+
+        <asp:DropDownList ID="DropDownBookingMovie29" runat="server"
+            AutoPostBack="true"
+            OnSelectedIndexChanged="DropDownBookingMovie29_SelectedIndexChanged">
+        </asp:DropDownList>
+
+        <br /><br />
+
+        Number of Tickets:
+
+        <asp:TextBox ID="TxtTickets29" runat="server"
+            Text="1" AutoPostBack="true"
+            OnTextChanged="TxtTickets29_TextChanged">
+        </asp:TextBox>
+
+        <br /><br />
+
+        Total Amount:
+
+        <asp:Label ID="LblAmount29" runat="server" Text="0"></asp:Label>
+
+        <br /><br />
+
+        <asp:Button ID="BtnBook29" runat="server"
+            Text="Book Tickets"
+            OnClick="BtnBook29_Click" />
+
+        <br /><br />
+
+        <asp:Label ID="LblBookingMessage29" runat="server"></asp:Label>
 
         <hr />
 

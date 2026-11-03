@@ -21,6 +21,7 @@ namespace MovieBooking29
             {
                 LoadCategories29();
                 LoadMovies29(0);
+                LoadBookingMovies29();
             }
         }
 
@@ -46,6 +47,11 @@ namespace MovieBooking29
                 DropDownMovieCategory29.DataTextField = "Cat_Type29";
                 DropDownMovieCategory29.DataValueField = "Cat_ID29";
                 DropDownMovieCategory29.DataBind();
+
+                DropDownBookingCategory29.DataSource = dt;
+                DropDownBookingCategory29.DataTextField = "Cat_Type29";
+                DropDownBookingCategory29.DataValueField = "Cat_ID29";
+                DropDownBookingCategory29.DataBind();
             }
         }
 
@@ -75,6 +81,88 @@ namespace MovieBooking29
                 GridViewMovie29.DataSource = dt;
                 GridViewMovie29.DataBind();
             }
+        }
+
+        private void LoadBookingMovies29()
+        {
+            using (SqlConnection con = new SqlConnection(GetConnection29()))
+            {
+                string query = "SELECT Movie_ID29, Movie_name29 FROM Tbl_Movie29 WHERE Cat_ID29 = @Category";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@Category", DropDownBookingCategory29.SelectedValue);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+
+                da.Fill(dt);
+
+                DropDownBookingMovie29.DataSource = dt;
+                DropDownBookingMovie29.DataTextField = "Movie_name29";
+                DropDownBookingMovie29.DataValueField = "Movie_ID29";
+                DropDownBookingMovie29.DataBind();
+            }
+
+            LblAmount29.Text = "0";
+        }
+
+        private decimal GetMovieRate29()
+        {
+            using (SqlConnection con = new SqlConnection(GetConnection29()))
+            {
+                string query = "SELECT rate29 FROM Tbl_Movie29 WHERE Movie_ID29 = @MovieID";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@MovieID", DropDownBookingMovie29.SelectedValue);
+
+                con.Open();
+
+                object result = cmd.ExecuteScalar();
+
+                if (result == null || result == DBNull.Value)
+                    return 0;
+
+                return Convert.ToDecimal(result);
+            }
+        }
+
+        private void CalculateAmount29()
+        {
+            int tickets;
+            decimal rate;
+
+            if (DropDownBookingMovie29.Items.Count == 0)
+            {
+                LblAmount29.Text = "0";
+                return;
+            }
+
+            if (!int.TryParse(TxtTickets29.Text, out tickets) || tickets <= 0)
+            {
+                LblAmount29.Text = "Enter valid ticket quantity";
+                return;
+            }
+
+            rate = GetMovieRate29();
+
+            decimal amount = rate * tickets;
+
+            LblAmount29.Text = amount.ToString("0.00");
+        }
+
+        protected void DropDownBookingCategory29_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            LoadBookingMovies29();
+        }
+
+        protected void DropDownBookingMovie29_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CalculateAmount29();
+        }
+
+        protected void TxtTickets29_TextChanged(object sender, EventArgs e)
+        {
+            CalculateAmount29();
         }
 
         protected void BtnAddCategory29_Click(object sender, EventArgs e)
@@ -111,6 +199,7 @@ namespace MovieBooking29
 
             TxtCategory29.Text = "";
             LoadCategories29();
+            LoadBookingMovies29();
             LoadMovies29(0);
 
             LblCategoryMessage29.Text = "Category added successfully.";
@@ -165,6 +254,7 @@ namespace MovieBooking29
             TxtRate29.Text = "";
 
             LoadCategories29();
+            LoadBookingMovies29();
             LoadMovies29(0);
 
             LblMovieMessage29.Text = "Movie added successfully.";
@@ -201,7 +291,74 @@ namespace MovieBooking29
             }
 
             LoadMovies29(Convert.ToInt32(DropDownCategory29.SelectedValue));
+            LoadBookingMovies29();
+
             e.Cancel = true;
+        }
+
+        protected void BtnBook29_Click(object sender, EventArgs e)
+        {
+            if (Session["UserID29"] == null)
+            {
+                LblBookingMessage29.Text = "Please login before booking tickets.";
+                return;
+            }
+
+            int tickets;
+            int movieId;
+            int categoryId;
+
+            if (!int.TryParse(TxtTickets29.Text, out tickets) || tickets <= 0)
+            {
+                LblBookingMessage29.Text = "Enter a valid number of tickets.";
+                return;
+            }
+
+            if (DropDownBookingMovie29.Items.Count == 0)
+            {
+                LblBookingMessage29.Text = "Please select a movie.";
+                return;
+            }
+
+            movieId = Convert.ToInt32(DropDownBookingMovie29.SelectedValue);
+            categoryId = Convert.ToInt32(DropDownBookingCategory29.SelectedValue);
+
+            using (SqlConnection con = new SqlConnection(GetConnection29()))
+            {
+                con.Open();
+
+                string rateQuery = "SELECT rate29 FROM Tbl_Movie29 WHERE Movie_ID29 = @MovieID AND Cat_ID29 = @CategoryID";
+
+                SqlCommand rateCmd = new SqlCommand(rateQuery, con);
+                rateCmd.Parameters.AddWithValue("@MovieID", movieId);
+                rateCmd.Parameters.AddWithValue("@CategoryID", categoryId);
+
+                object rateResult = rateCmd.ExecuteScalar();
+
+                if (rateResult == null || rateResult == DBNull.Value)
+                {
+                    LblBookingMessage29.Text = "Selected movie is not available.";
+                    return;
+                }
+
+                decimal rate = Convert.ToDecimal(rateResult);
+                decimal amount = rate * tickets;
+
+                string query = "INSERT INTO Tbl_Booking29 (User_ID29, Cat_ID29, Movie_ID29, no_of_Tickets29, amount29) VALUES (@UserID, @CategoryID, @MovieID, @Tickets, @Amount)";
+
+                SqlCommand cmd = new SqlCommand(query, con);
+
+                cmd.Parameters.AddWithValue("@UserID", Session["UserID29"]);
+                cmd.Parameters.AddWithValue("@CategoryID", categoryId);
+                cmd.Parameters.AddWithValue("@MovieID", movieId);
+                cmd.Parameters.AddWithValue("@Tickets", tickets);
+                cmd.Parameters.AddWithValue("@Amount", amount);
+
+                cmd.ExecuteNonQuery();
+
+                LblAmount29.Text = amount.ToString("0.00");
+                LblBookingMessage29.Text = "Tickets booked successfully. Total Amount: " + amount.ToString("0.00");
+            }
         }
     }
 }
